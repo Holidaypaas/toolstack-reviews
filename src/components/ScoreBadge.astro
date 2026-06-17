@@ -1,0 +1,30 @@
+---
+import { formatScore } from '../lib/score';
+
+/**
+ * Compact score badge — used on listing cards and in comparison tables.
+ * Same visual DNA as the ScoreCard: ink frame, mono amber number.
+ */
+interface Props {
+  score: number;
+  /** "sm" for table cells, "md" for cards. */
+  size?: 'sm' | 'md';
+  class?: string;
+}
+
+const { score, size = 'md', class: className } = Astro.props;
+---
+
+<span
+  class:list={[
+    'inline-flex items-baseline gap-0.5 rounded border-2 border-ink bg-paper-raised font-mono font-bold leading-none text-score-600',
+    size === 'md' ? 'px-2 py-1 text-base' : 'px-1.5 py-0.5 text-sm',
+    className,
+  ]}
+  aria-label={`Scored ${formatScore(score)} out of 10`}
+>
+  {formatScore(score)}<span
+    class:list={['font-semibold text-ink-faint', size === 'md' ? 'text-[10px]' : 'text-[9px]']}
+    aria-hidden="true">/10</span
+  >
+</span>

@@ -1,0 +1,92 @@
+---
+import { Image } from 'astro:assets';
+import { getEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../config/site';
+import { personSchema } from '../lib/seo';
+
+const author = await getEntry('authors', SITE.defaultAuthorId);
+if (!author) throw new Error(`Default author "${SITE.defaultAuthorId}" not found`);
+---
+
+<BaseLayout
+  title={`About ${SITE.name}`}
+  description={`Who runs ${SITE.name}, why it exists, and how every tool gets tested before we recommend it.`}
+  breadcrumbs={[
+    { name: 'Home', url: '/' },
+    { name: 'About', url: '/about/' },
+  ]}
+  jsonLd={[personSchema(author.data)]}
+>
+  <div class="mx-auto max-w-[720px] px-4 py-12">
+    <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+      About {SITE.name}
+    </h1>
+
+    <div class="mt-8 flex items-center gap-5">
+      {/* TODO: replace placeholder avatar with a real photo — real faces build trust */}
+      <Image
+        src={author.data.avatar}
+        alt={`Photo of ${author.data.name}`}
+        width={96}
+        height={96}
+        class="h-24 w-24 rounded-full border-2 border-slate-200 object-cover"
+        loading="eager"
+      />
+      <div>
+        <p class="text-xl font-bold text-slate-900">{author.data.name}</p>
+        <p class="text-slate-600">{author.data.role}</p>
+        <div class="mt-1 flex gap-3 text-sm">
+          {author.data.twitter && <a href={author.data.twitter} rel="me noopener" class="text-accent-700 hover:underline">Twitter/X</a>}
+          {author.data.linkedin && <a href={author.data.linkedin} rel="me noopener" class="text-accent-700 hover:underline">LinkedIn</a>}
+        </div>
+      </div>
+    </div>
+
+    <div class="prose prose-slate mt-8 max-w-none">
+      <!-- TODO: replace this placeholder bio with your real story — specifics build E-E-A-T -->
+      <p>{author.data.bio}</p>
+      <p>
+        {SITE.name} exists because most "review" sites rank whoever pays the
+        highest commission. I started this site after wasting hundreds of
+        dollars on tools that looked great in screenshots and fell apart in
+        daily use. Every recommendation here comes from a real account, paid
+        for with my own money.
+      </p>
+
+      <h2>Why you can trust these reviews</h2>
+      <ul>
+        <li>
+          <strong>We buy the tools we review.</strong> Paid plans, real
+          projects, at least two weeks of daily use before a verdict.
+        </li>
+        <li>
+          <strong>Affiliate links never change a rating.</strong> We review
+          plenty of tools that pay us nothing, and we say so when a tool with a
+          great commission isn't worth your money.
+        </li>
+        <li>
+          <strong>Every review shows its date.</strong> Tools change fast — we
+          re-test and update reviews, and the "Last updated" badge tells you
+          exactly how fresh each one is.
+        </li>
+      </ul>
+
+      <h2>How we test</h2>
+      <p>
+        The short version: real account → real project → daily use for 2+
+        weeks → scored on the same rubric every time. The full breakdown,
+        including our scoring rubric, lives on the
+        <a href="/how-we-test/">How We Test</a> page.
+      </p>
+
+      <h2>Get in touch</h2>
+      <p>
+        <!-- TODO: replace with your real contact email -->
+        Spotted an outdated price or a factual error? Email
+        <a href="mailto:hello@toolstackreviews.com">hello@toolstackreviews.com</a>
+        — corrections ship fast.
+      </p>
+    </div>
+  </div>
+</BaseLayout>

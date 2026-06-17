@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <!-- TODO: replace with a real headshot photo (real faces build trust / E-E-A-T) -->
+  <rect width="200" height="200" fill="#0d9488"/>
+  <circle cx="100" cy="78" r="34" fill="#f0fdfa"/>
+  <path d="M40 178c0-33 27-54 60-54s60 21 60 54v22H40z" fill="#f0fdfa"/>
+</svg>

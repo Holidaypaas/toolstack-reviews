@@ -1,0 +1,42 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+
+const comparisons = (await getCollection('comparisons')).sort(
+  (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
+);
+---
+
+<BaseLayout
+  title="Tool Comparisons"
+  description="Head-to-head comparisons of popular software tools, with a clear winner for freelancers."
+  breadcrumbs={[
+    { name: 'Home', url: '/' },
+    { name: 'Comparisons', url: '/vs/' },
+  ]}
+>
+  <div class="mx-auto max-w-5xl px-4 py-12">
+    <h1 class="font-display text-display-sm font-bold text-ink">
+      Head-to-head comparisons
+    </h1>
+    <p class="mt-3 max-w-xl text-lg text-ink-muted">
+      Two tools, one winner. We compare on the criteria that matter to a solo
+      business: price, time-to-launch, and the features you'll actually use.
+    </p>
+    <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        comparisons.map((c) => (
+          <PostCard
+            href={`/vs/${c.id}/`}
+            title={`${c.data.toolA} vs ${c.data.toolB}`}
+            description={c.data.description}
+            category={c.data.category}
+            lastUpdated={c.data.lastUpdated}
+            badge="Comparison"
+          />
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>

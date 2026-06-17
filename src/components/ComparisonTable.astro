@@ -1,0 +1,113 @@
+---
+import ScoreBadge from './ScoreBadge.astro';
+
+/**
+ * Responsive feature-comparison table. Sticky header row on desktop,
+ * winner column tinted teal, all data values in mono.
+ *
+ * Usage in MDX:
+ *   <ComparisonTable
+ *     caption="Systeme.io vs ClickFunnels at a glance"
+ *     columns={["Systeme.io", "ClickFunnels"]}
+ *     columnScores={[8.5, 7.2]}
+ *     winner="Systeme.io"
+ *     rows={[
+ *       { feature: "Starting price", values: ["$0/mo", "$97/mo"] },
+ *       { feature: "Email marketing", values: [true, false] },
+ *     ]}
+ *   />
+ *
+ * `values` accepts strings (rendered as mono text) or booleans (✓ / ✗).
+ */
+interface Row {
+  feature: string;
+  values: (string | boolean)[];
+}
+
+interface Props {
+  columns: string[];
+  rows: Row[];
+  /** Our test scores per column — rendered as compact badges in the header. */
+  columnScores?: (number | null)[];
+  /** Column name to highlight as the winner. */
+  winner?: string;
+  caption?: string;
+}
+
+const { columns, rows, columnScores, winner, caption } = Astro.props;
+const winnerIndex = winner ? columns.indexOf(winner) : -1;
+---
+
+<div
+  class="not-prose my-8 overflow-x-auto rounded-lg border border-line bg-paper-raised shadow-sm lg:overflow-x-visible"
+>
+  <table class="w-full min-w-[480px] border-collapse text-left text-sm">
+    {
+      caption && (
+        <caption class="border-b border-line bg-paper px-4 py-3 text-left font-display text-sm font-bold tracking-tight text-ink">
+          {caption}
+        </caption>
+      )
+    }
+    <thead>
+      <tr>
+        <th
+          scope="col"
+          class="border-b border-line bg-paper px-4 py-3 text-xs font-semibold uppercase tracking-wide text-ink-faint lg:sticky lg:top-14 lg:z-10"
+        >
+          Feature
+        </th>
+        {
+          columns.map((col, i) => (
+            <th
+              scope="col"
+              class:list={[
+                'border-b border-line px-4 py-3 font-display font-bold tracking-tight lg:sticky lg:top-14 lg:z-10',
+                i === winnerIndex ? 'bg-accent-50 text-accent-900' : 'bg-paper text-ink',
+              ]}
+            >
+              <span class="flex flex-wrap items-center gap-2">
+                {col}
+                {columnScores?.[i] != null && <ScoreBadge score={columnScores[i]!} size="sm" />}
+                {i === winnerIndex && (
+                  <span class="rounded-full bg-accent-600 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wide text-white">
+                    Winner
+                  </span>
+                )}
+              </span>
+            </th>
+          ))
+        }
+      </tr>
+    </thead>
+    <tbody>
+      {
+        rows.map((row) => (
+          <tr class="border-b border-line last:border-0">
+            <th scope="row" class="px-4 py-3 font-medium text-ink-muted">
+              {row.feature}
+            </th>
+            {row.values.map((value, i) => (
+              <td
+                class:list={[
+                  'px-4 py-3 font-mono text-[13px] text-ink',
+                  i === winnerIndex && 'bg-accent-50/60 font-semibold',
+                ]}
+              >
+                {typeof value === 'boolean' ? (
+                  value ? (
+                    <span class="font-bold text-accent-700" aria-label="Yes">✓</span>
+                  ) : (
+                    <span class="font-bold text-ink-faint" aria-label="No">✗</span>
+                  )
+                ) : (
+                  value
+                )}
+              </td>
+            ))}
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>

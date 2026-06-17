@@ -1,0 +1,40 @@
+---
+import type { MarkdownHeading } from 'astro';
+
+/**
+ * Auto-generated table of contents from MDX headings (h2/h3).
+ * Pass the `headings` array returned by `render(entry)`.
+ * Sticky positioning is applied by the parent layout on desktop.
+ */
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+const { headings } = Astro.props;
+const visible = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+{
+  visible.length > 1 && (
+    <nav
+      aria-label="Table of contents"
+      class="rounded-lg border border-slate-200 bg-slate-50 p-5 text-sm"
+    >
+      <p class="font-bold uppercase tracking-wide text-slate-500 text-xs">
+        On this page
+      </p>
+      <ul class="mt-3 space-y-2">
+        {visible.map((heading) => (
+          <li class:list={[heading.depth === 3 && 'pl-4']}>
+            <a
+              href={`#${heading.slug}`}
+              class="block leading-snug text-slate-600 hover:text-accent-700"
+            >
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}

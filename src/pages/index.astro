@@ -1,0 +1,178 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import EmailSignup from '../components/EmailSignup.astro';
+import ScoreCard from '../components/ScoreCard.astro';
+import { SITE } from '../config/site';
+import { overallScore } from '../lib/score';
+
+const reviews = (await getCollection('reviews')).sort(
+  (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
+);
+const comparisons = (await getCollection('comparisons')).sort(
+  (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
+);
+const roundups = (await getCollection('roundups')).sort(
+  (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
+);
+
+// The hero shows the real ScoreCard component for our latest review —
+// the design thesis (evidence-first testing) in one view.
+const heroReview = reviews[0];
+
+const startHere = [
+  {
+    title: 'How we test tools',
+    description: 'Our methodology: real accounts, real money, 2+ weeks of daily use.',
+    href: '/how-we-test/',
+  },
+  ...roundups.slice(0, 1).map((r) => ({
+    title: r.data.title,
+    description: r.data.description,
+    href: `/best/${r.id}/`,
+  })),
+  ...comparisons.slice(0, 1).map((c) => ({
+    title: c.data.title,
+    description: c.data.description,
+    href: `/vs/${c.id}/`,
+  })),
+];
+---
+
+<BaseLayout title={`${SITE.name} — ${SITE.tagline}`} description={SITE.description}>
+  <!-- Hero: headline left, live score card right, dot-grid bench texture -->
+  <section
+    class="border-b border-line bg-paper-raised"
+    style="background-image: radial-gradient(var(--color-line) 1px, transparent 1px); background-size: 22px 22px;"
+  >
+    <div
+      class="hero-rise mx-auto grid max-w-5xl items-center gap-10 px-4 py-16 sm:py-20 lg:grid-cols-[1.15fr_1fr]"
+    >
+      <div>
+        <p class="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-700">
+          Tested, scored, evidenced
+        </p>
+        <h1 class="font-display text-display mt-4 font-bold text-ink">
+          Software reviews from someone who actually pays for the tools.
+        </h1>
+        <p class="mt-4 max-w-xl text-lg leading-relaxed text-ink-muted">
+          Every score on {SITE.name} comes from weeks of real use with a paid
+          account, graded on the same rubric every time. No sponsored rankings,
+          no pay-to-win lists.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-4">
+          <a
+            href="/reviews/"
+            class="btn-press rounded-lg bg-accent-600 px-6 py-3 text-base font-bold text-white shadow-md transition-colors hover:bg-accent-700"
+          >
+            Browse reviews
+          </a>
+          <a
+            href="/how-we-test/"
+            class="btn-press rounded-lg border border-line-strong bg-paper-raised px-6 py-3 text-base font-semibold text-ink transition-colors hover:border-accent-600 hover:text-accent-700"
+          >
+            How we test →
+          </a>
+        </div>
+      </div>
+      {
+        heroReview && (
+          <div class="relative hidden lg:block">
+            <ScoreCard
+              toolName={heroReview.data.toolName}
+              scores={heroReview.data.scores}
+              class="rotate-1 shadow-lg"
+            />
+            <a
+              href={`/reviews/${heroReview.id}/`}
+              class="mt-3 block text-right font-mono text-xs text-ink-faint hover:text-accent-700"
+            >
+              ↑ Latest test: {heroReview.data.toolName} — read the full review
+            </a>
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- AI Tool Finder teaser -->
+  <section class="border-b border-line bg-ink">
+    <div
+      class="mx-auto flex max-w-5xl flex-col items-start justify-between gap-6 px-4 py-10 sm:flex-row sm:items-center"
+    >
+      <div>
+        <p class="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-accent-400">
+          New · AI Tool Finder
+        </p>
+        <h2 class="font-display mt-2 text-xl font-bold tracking-tight text-paper">
+          Describe your business. Get a tool stack built from our test results.
+        </h2>
+        <p class="mt-2 max-w-lg text-sm leading-relaxed text-paper/70">
+          Tell us what you do and your budget — we'll match you to the
+          highest-scoring tools from our hands-on reviews. No made-up
+          recommendations: only tools we've actually tested.
+        </p>
+      </div>
+      <a
+        href="/tool-finder/"
+        class="btn-press shrink-0 rounded-lg bg-accent-500 px-6 py-3 text-base font-bold text-ink transition-colors hover:bg-accent-400"
+      >
+        Find my stack →
+      </a>
+    </div>
+  </section>
+
+  <!-- Latest reviews -->
+  <section class="mx-auto max-w-5xl px-4 py-14">
+    <div class="flex items-baseline justify-between">
+      <h2 class="font-display text-2xl font-bold tracking-tight text-ink">Latest reviews</h2>
+      <a href="/reviews/" class="text-sm font-semibold text-accent-700 hover:underline">
+        View all →
+      </a>
+    </div>
+    <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        reviews.slice(0, 6).map((review) => (
+          <PostCard
+            href={`/reviews/${review.id}/`}
+            title={`${review.data.toolName} review`}
+            description={review.data.verdict}
+            category={review.data.category}
+            score={overallScore(review.data.scores)}
+            lastUpdated={review.data.lastUpdated}
+          />
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Start here -->
+  <section class="border-y border-line bg-paper-raised">
+    <div class="mx-auto max-w-5xl px-4 py-14">
+      <h2 class="font-display text-2xl font-bold tracking-tight text-ink">
+        New here? Start with these
+      </h2>
+      <div class="mt-6 grid gap-6 sm:grid-cols-3">
+        {
+          startHere.map((item) => (
+            <a
+              href={item.href}
+              class="card-lift group rounded-lg border border-line bg-paper p-5 shadow-sm"
+            >
+              <h3 class="font-display font-bold tracking-tight text-ink group-hover:text-accent-700">
+                {item.title}
+              </h3>
+              <p class="mt-2 text-sm leading-relaxed text-ink-muted">{item.description}</p>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Email signup -->
+  <section class="mx-auto max-w-5xl px-4 py-14">
+    <EmailSignup variant="inline" />
+  </section>
+</BaseLayout>

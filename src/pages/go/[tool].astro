@@ -1,0 +1,49 @@
+---
+import { affiliates } from '../../config/affiliates';
+
+/**
+ * Affiliate redirect system.
+ *
+ * On static hosting this page does an instant meta-refresh + JS redirect to
+ * the real affiliate URL. Pages are noindex and excluded from the sitemap,
+ * and /go/ is disallowed in robots.txt.
+ *
+ * If you deploy to Vercel/Cloudflare and want true 301s instead, add entries
+ * to vercel.json `redirects` / Cloudflare `_redirects` generated from
+ * src/config/affiliates.ts — the content URLs (/go/...) won't need to change.
+ */
+export function getStaticPaths() {
+  return Object.entries(affiliates).map(([tool, program]) => ({
+    params: { tool },
+    props: { program },
+  }));
+}
+
+const { tool } = Astro.params;
+const { program } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta http-equiv="refresh" content={`0;url=${program.url}`} />
+    <title>Redirecting…</title>
+    <script is:inline define:vars={{ url: program.url, tool }}>
+      // Click event for analytics, then redirect
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: 'affiliate_redirect', tool: tool });
+      window.location.replace(url);
+    </script>
+  </head>
+  <body style="font-family: system-ui, sans-serif; text-align: center; padding: 4rem 1rem;">
+    <p>
+      Taking you to <strong>{program.programName.replace(/ (Partner|Affiliate) Program$/, '')}</strong>…
+    </p>
+    <p>
+      <a href={program.url} rel="sponsored nofollow noopener">Click here if you're not redirected.</a>
+    </p>
+  </body>
+</html>

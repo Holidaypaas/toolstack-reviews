@@ -1,0 +1,66 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../config/site';
+---
+
+<BaseLayout
+  title="Affiliate Disclosure"
+  description={`How ${SITE.name} makes money through affiliate links, and why that never affects our ratings.`}
+  breadcrumbs={[
+    { name: 'Home', url: '/' },
+    { name: 'Affiliate Disclosure', url: '/affiliate-disclosure/' },
+  ]}
+>
+  <div class="mx-auto max-w-[720px] px-4 py-12">
+    <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">
+      Affiliate disclosure
+    </h1>
+    <div class="prose prose-slate mt-8 max-w-none">
+      <!-- TODO: have a lawyer review this page before launch. This is plausible placeholder copy, not legal advice. -->
+      <p>
+        <strong>The short version:</strong> some links on {SITE.name} are
+        affiliate links. If you click one and buy something, the vendor pays us
+        a commission. It costs you nothing extra, and it never changes what we
+        recommend.
+      </p>
+
+      <h2>FTC compliance</h2>
+      <p>
+        In accordance with the Federal Trade Commission's 16 CFR Part 255
+        ("Guides Concerning the Use of Endorsements and Testimonials in
+        Advertising"), we disclose that {SITE.name} has affiliate relationships
+        with some of the companies whose products are mentioned on this site.
+      </p>
+
+      <h2>How it works</h2>
+      <ul>
+        <li>
+          Links that route through <code>/go/</code> are affiliate links. Each
+          one is marked <code>rel="sponsored"</code> as required by Google.
+        </li>
+        <li>
+          Commissions are paid by the vendor out of their marketing budget —
+          the price you pay is identical (and sometimes lower, when a link
+          carries an exclusive discount).
+        </li>
+        <li>
+          Every post containing affiliate links displays a disclosure at the
+          top of the article, before any links.
+        </li>
+      </ul>
+
+      <h2>What we promise</h2>
+      <ul>
+        <li>Ratings are set by our <a href="/how-we-test/">testing rubric</a> before affiliate programs are considered.</li>
+        <li>We regularly recommend products that pay us nothing.</li>
+        <li>Negative findings stay in reviews regardless of commission rates.</li>
+      </ul>
+
+      <p>
+        Questions about a specific relationship? Email
+        <!-- TODO: replace with your real contact email -->
+        <a href="mailto:hello@toolstackreviews.com">hello@toolstackreviews.com</a>.
+      </p>
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,110 @@
+---
+import type { CATEGORIES } from '../content.config';
+
+/**
+ * Abstract geometric "tool glyph" illustration system.
+ * Grid-based (48x48), two colors only: ink strokes + teal fills.
+ * Used as category icons (size prop) and card thumbnails (variant="thumb").
+ */
+type Category = (typeof CATEGORIES)[number];
+
+interface Props {
+  name: Category;
+  size?: number;
+  /** "thumb" renders the glyph centered on a dotted-grid paper panel (16:9-ish). */
+  variant?: 'icon' | 'thumb';
+  class?: string;
+}
+
+const { name, size = 48, variant = 'icon', class: className } = Astro.props;
+
+const INK = '#1a1d21';
+const TEAL = '#0d9488';
+const TEAL_LIGHT = '#ccfbf1';
+
+// Each glyph is drawn on a 48x48 grid, stroke-width 2.5, two-color.
+const glyphs: Record<Category, string> = {
+  email: `
+    <rect x="6" y="12" width="36" height="26" rx="3" fill="${TEAL_LIGHT}" stroke="${INK}" stroke-width="2.5"/>
+    <path d="M8 15l16 13 16-13" fill="none" stroke="${INK}" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="38" cy="12" r="6" fill="${TEAL}" stroke="${INK}" stroke-width="2.5"/>
+  `,
+  funnels: `
+    <path d="M8 8h32l-12 16v14l-8 4V24L8 8z" fill="${TEAL_LIGHT}" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/>
+    <line x1="14" y1="14" x2="34" y2="14" stroke="${TEAL}" stroke-width="2.5"/>
+    <circle cx="24" cy="40" r="3" fill="${TEAL}"/>
+  `,
+  invoicing: `
+    <rect x="10" y="6" width="24" height="34" rx="2" fill="#ffffff" stroke="${INK}" stroke-width="2.5"/>
+    <line x1="15" y1="14" x2="29" y2="14" stroke="${INK}" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="15" y1="20" x2="29" y2="20" stroke="${INK}" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="15" y1="26" x2="23" y2="26" stroke="${INK}" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="34" cy="34" r="9" fill="${TEAL}" stroke="${INK}" stroke-width="2.5"/>
+    <path d="M34 30v8M31 32.5h5" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+  `,
+  'ai-writing': `
+    <path d="M10 38L30 18l4 4L14 42l-6 2 2-6z" fill="${TEAL_LIGHT}" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M36 6l2 5 5 2-5 2-2 5-2-5-5-2 5-2 2-5z" fill="${TEAL}" stroke="${INK}" stroke-width="2"/>
+    <line x1="28" y1="40" x2="42" y2="40" stroke="${INK}" stroke-width="2.5" stroke-linecap="round"/>
+  `,
+  scheduling: `
+    <rect x="6" y="10" width="36" height="32" rx="3" fill="#ffffff" stroke="${INK}" stroke-width="2.5"/>
+    <line x1="6" y1="19" x2="42" y2="19" stroke="${INK}" stroke-width="2.5"/>
+    <line x1="15" y1="6" x2="15" y2="13" stroke="${INK}" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="33" y1="6" x2="33" y2="13" stroke="${INK}" stroke-width="2.5" stroke-linecap="round"/>
+    <rect x="13" y="25" width="7" height="7" fill="${TEAL_LIGHT}" stroke="${INK}" stroke-width="2"/>
+    <rect x="27" y="25" width="7" height="7" fill="${TEAL}" stroke="${INK}" stroke-width="2"/>
+    <rect x="13" y="34" width="7" height="4" fill="none" stroke="${INK}" stroke-width="2"/>
+  `,
+  crm: `
+    <circle cx="24" cy="12" r="6" fill="${TEAL}" stroke="${INK}" stroke-width="2.5"/>
+    <circle cx="10" cy="36" r="6" fill="${TEAL_LIGHT}" stroke="${INK}" stroke-width="2.5"/>
+    <circle cx="38" cy="36" r="6" fill="${TEAL_LIGHT}" stroke="${INK}" stroke-width="2.5"/>
+    <path d="M21 17l-8 13M27 17l8 13M16 36h16" fill="none" stroke="${INK}" stroke-width="2.5" stroke-linecap="round"/>
+  `,
+  hosting: `
+    <rect x="8" y="8" width="32" height="12" rx="2" fill="${TEAL_LIGHT}" stroke="${INK}" stroke-width="2.5"/>
+    <rect x="8" y="26" width="32" height="12" rx="2" fill="#ffffff" stroke="${INK}" stroke-width="2.5"/>
+    <circle cx="14" cy="14" r="2" fill="${TEAL}"/>
+    <circle cx="14" cy="32" r="2" fill="${TEAL}"/>
+    <line x1="22" y1="14" x2="34" y2="14" stroke="${INK}" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="22" y1="32" x2="34" y2="32" stroke="${INK}" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M24 20v6" stroke="${TEAL}" stroke-width="2.5"/>
+  `,
+  productivity: `
+    <rect x="6" y="6" width="16" height="16" rx="2" fill="${TEAL}" stroke="${INK}" stroke-width="2.5"/>
+    <path d="M10 14l3 3 6-6" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="26" y="6" width="16" height="16" rx="2" fill="#ffffff" stroke="${INK}" stroke-width="2.5"/>
+    <rect x="6" y="26" width="16" height="16" rx="2" fill="#ffffff" stroke="${INK}" stroke-width="2.5"/>
+    <rect x="26" y="26" width="16" height="16" rx="2" fill="${TEAL_LIGHT}" stroke="${INK}" stroke-width="2.5"/>
+    <path d="M30 34l3 3 6-6" fill="none" stroke="${INK}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  `,
+};
+
+const glyphMarkup = glyphs[name];
+---
+
+{
+  variant === 'icon' ? (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 48 48"
+      fill="none"
+      aria-hidden="true"
+      class={className}
+      set:html={glyphMarkup}
+    />
+  ) : (
+    <div
+      class:list={[
+        'flex items-center justify-center border-b border-line bg-paper',
+        className,
+      ]}
+      style="background-image: radial-gradient(var(--color-line) 1px, transparent 1px); background-size: 14px 14px;"
+      aria-hidden="true"
+    >
+      <svg width="76" height="76" viewBox="0 0 48 48" fill="none" set:html={glyphMarkup} />
+    </div>
+  )
+}

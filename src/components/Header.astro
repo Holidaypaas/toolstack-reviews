@@ -1,0 +1,61 @@
+---
+import { SITE } from '../config/site';
+
+const nav = [
+  { label: 'Reviews', href: '/reviews/' },
+  { label: 'Comparisons', href: '/vs/' },
+  { label: 'Blog', href: '/blog/' },
+  { label: 'How We Test', href: '/how-we-test/' },
+  { label: 'About', href: '/about/' },
+];
+const currentPath = Astro.url.pathname;
+---
+
+<header class="sticky top-0 z-40 border-b border-line bg-paper/95 backdrop-blur">
+  <div
+    class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-4 py-3"
+  >
+    <a href="/" class="shrink-0" aria-label={`${SITE.name} home`}>
+      <img
+        src="/brand/logo-horizontal.svg"
+        alt={SITE.name}
+        width="131"
+        height="36"
+        class="h-9 w-auto"
+      />
+    </a>
+    <nav aria-label="Main navigation">
+      <ul class="flex flex-wrap items-center gap-x-5 gap-y-1 text-sm font-medium">
+        {
+          nav.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                aria-current={currentPath.startsWith(item.href) ? 'page' : undefined}
+                class:list={[
+                  'py-1 transition-colors hover:text-accent-700',
+                  currentPath.startsWith(item.href) ? 'text-accent-700' : 'text-ink-muted',
+                ]}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+        <li>
+          <a
+            href="/tool-finder/"
+            class:list={[
+              'btn-press rounded-lg border-2 px-3 py-1.5 font-bold transition-colors',
+              currentPath.startsWith('/tool-finder')
+                ? 'border-accent-700 bg-accent-700 text-white'
+                : 'border-accent-600 text-accent-700 hover:bg-accent-600 hover:text-white',
+            ]}
+          >
+            Tool Finder
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>

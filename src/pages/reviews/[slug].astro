@@ -1,0 +1,101 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import VerdictBox from '../../components/VerdictBox.astro';
+import ProsCons from '../../components/ProsCons.astro';
+import Screenshot from '../../components/Screenshot.astro';
+import QuickAnswer from '../../components/QuickAnswer.astro';
+import KeyFacts from '../../components/KeyFacts.astro';
+import { productReviewSchema, articleSchema } from '../../lib/seo';
+import { overallScore } from '../../lib/score';
+
+export async function getStaticPaths() {
+  const reviews = await getCollection('reviews');
+  return reviews.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+const author = await getEntry(data.author);
+if (!author) throw new Error(`Unknown author "${data.author.id}" in ${entry.id}`);
+const { Content, headings } = await render(entry);
+
+const url = `/reviews/${entry.id}/`;
+const ogImage = `/og/reviews/${entry.id}.png`;
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Reviews', url: '/reviews/' },
+  { name: data.toolName, url },
+];
+
+const jsonLd = [
+  productReviewSchema({
+    toolName: data.toolName,
+    description: data.description,
+    url,
+    image: ogImage,
+    rating: overallScore(data.scores),
+    publishDate: data.publishDate,
+    lastUpdated: data.lastUpdated,
+    authorName: author.data.name,
+    keyFacts: data.keyFacts,
+  }),
+  articleSchema({
+    title: data.title,
+    description: data.description,
+    url,
+    image: ogImage,
+    publishDate: data.publishDate,
+    lastUpdated: data.lastUpdated,
+    authorName: author.data.name,
+  }),
+];
+---
+
+<ArticleLayout
+  title={data.title}
+  description={data.description}
+  publishDate={data.publishDate}
+  lastUpdated={data.lastUpdated}
+  author={author}
+  headings={headings}
+  breadcrumbs={breadcrumbs}
+  hasAffiliateLinks={true}
+  ogImage={ogImage}
+  jsonLd={jsonLd}
+>
+  {/* GEO: self-contained citable answer within the first 200 words. */}
+  <QuickAnswer text={data.quickAnswer} />
+  {/* Verdict first — readers skim. Everything below is supporting evidence. */}
+  <VerdictBox
+    toolName={data.toolName}
+    scores={data.scores}
+    verdict={data.verdict}
+    pricingFrom={data.pricingFrom}
+    ctaHref={data.affiliateUrl}
+  />
+  {
+    data.keyFacts && (
+      <KeyFacts
+        facts={data.keyFacts}
+        asOf={data.lastUpdated}
+        subject={data.toolName}
+        emitJsonLd={false}
+      />
+    )
+  }
+  <ProsCons pros={data.pros} cons={data.cons} />
+  <Content />
+  {
+    data.screenshots && data.screenshots.length > 0 && (
+      <section aria-label="Screenshots from our testing">
+        <h2 class="font-display text-2xl font-bold tracking-tight text-ink">
+          What does {data.toolName} look like in use?
+        </h2>
+        {data.screenshots.map((shot) => (
+          <Screenshot src={shot.src} alt={shot.alt} caption={shot.caption} />
+        ))}
+      </section>
+    )
+  }
+</ArticleLayout>

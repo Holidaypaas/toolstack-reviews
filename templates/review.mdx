@@ -1,0 +1,89 @@
+---
+title: '{{TOOL_NAME}} Review ({{YEAR}}): TODO — add a benefit-driven subtitle'
+description: 'TODO: 150-160 char meta description. Lead with what you tested and the surprising finding.'
+toolName: '{{TOOL_NAME}}'
+# One of: email | funnels | invoicing | ai-writing | scheduling | crm | hosting | productivity
+category: 'productivity'
+affiliateUrl: '/go/{{TOOL_SLUG}}/'
+# Sub-scores 0-10 from the /how-we-test rubric; the overall score is their mean
+scores:
+  easeOfUse: 7.0
+  value: 7.0
+  features: 7.0
+  support: 7.0
+pros:
+  - 'TODO: specific pro with a number if possible'
+  - 'TODO: pro'
+  - 'TODO: pro'
+cons:
+  - 'TODO: specific con — honesty builds trust'
+  - 'TODO: con'
+pricingFrom: '$TODO/mo'
+publishDate: {{DATE}}
+lastUpdated: {{DATE}}
+author: alex-carter
+featuredImage: '../../assets/images/{{TOOL_SLUG}}.svg'
+verdict: 'TODO: 1-2 sentence verdict. Who is this for, and what is the one caveat?'
+# GEO quick answer: 60-80 words, self-contained, MUST name the tool, the score,
+# the price, and the verdict — AI search engines lift this verbatim.
+quickAnswer: 'TODO: Replace this placeholder with a 60-80 word self-contained answer. Name {{TOOL_NAME}} explicitly, state the overall score, the starting price, who should use it, and who should skip it. It must read sensibly with zero surrounding context, because AI search engines will quote it on its own.'
+# GEO key facts: 4-6 verifiable stats with values you have personally checked.
+keyFacts:
+  - label: 'Our test score'
+    value: 'TODO/10'
+  - label: 'Starting price'
+    value: '$TODO/mo'
+  - label: 'Cheapest paid plan'
+    value: '$TODO/mo'
+  - label: 'Test period'
+    value: 'TODO days, paid account'
+# Uncomment once you have real screenshots (16:10) in src/assets/images/screenshots/
+# screenshots:
+#   - src: '../../assets/images/screenshots/{{TOOL_SLUG}}-dashboard.svg'
+#     alt: 'TODO describe what the screenshot shows'
+#     caption: 'Fig. 1 — TODO caption with a finding from your testing.'
+---
+
+import ComparisonTable from '../../components/ComparisonTable.astro';
+import FAQ from '../../components/FAQ.astro';
+
+{/* Reminder: add the affiliate program to src/config/affiliates.ts
+    with the key "{{TOOL_SLUG}}" before this builds a working CTA. */}
+
+## What is {{TOOL_NAME}}?
+
+TODO: 2-3 sentences. What it does, who it's aimed at, and how you tested it.
+
+{/* GEO: write every section heading as a question a searcher would ask. */}
+
+## How much does {{TOOL_NAME}} cost?
+
+<ComparisonTable
+  caption="{{TOOL_NAME}} plans"
+  columns={['Plan A', 'Plan B']}
+  rows={[
+    { feature: 'Price', values: ['$TODO/mo', '$TODO/mo'] },
+    { feature: 'TODO feature', values: [true, false] },
+  ]}
+/>
+
+## What is {{TOOL_NAME}} like to use?
+
+TODO: your real testing notes. Specifics beat adjectives — timings,
+screenshots, things that broke.
+
+### Where does {{TOOL_NAME}} fall short?
+
+TODO: the honest negatives. Every credible review has them.
+
+## Who should use {{TOOL_NAME}}?
+
+- **TODO audience** — why
+- **Skip it if** TODO
+
+<FAQ
+  faqs={[
+    { question: 'TODO question?', answer: 'TODO answer (plain text, goes into FAQ schema).' },
+    { question: 'TODO question?', answer: 'TODO answer.' },
+  ]}
+/>

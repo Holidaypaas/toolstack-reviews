@@ -1,0 +1,26 @@
+---
+interface Props {
+  date: Date;
+  class?: string;
+}
+
+const { date, class: className } = Astro.props;
+const formatted = date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<span
+  class:list={[
+    'inline-flex items-center gap-1.5 rounded-full bg-accent-50 px-3 py-1 text-xs font-semibold text-accent-800',
+    className,
+  ]}
+>
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+    <circle cx="12" cy="12" r="9"></circle>
+    <path d="M12 7v5l3 3"></path>
+  </svg>
+  Last updated <time datetime={date.toISOString().slice(0, 10)}>{formatted}</time>
+</span>

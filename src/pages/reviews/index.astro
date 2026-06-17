@@ -1,0 +1,41 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { overallScore } from '../../lib/score';
+
+const reviews = (await getCollection('reviews')).sort(
+  (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
+);
+---
+
+<BaseLayout
+  title="All Tool Reviews"
+  description="Every software tool we've reviewed hands-on — rated, tested, and updated regularly."
+  breadcrumbs={[
+    { name: 'Home', url: '/' },
+    { name: 'Reviews', url: '/reviews/' },
+  ]}
+>
+  <div class="mx-auto max-w-5xl px-4 py-12">
+    <h1 class="font-display text-display-sm font-bold text-ink">Tool reviews</h1>
+    <p class="mt-3 max-w-xl text-lg text-ink-muted">
+      Every tool below was tested with a real paid account. Scores reflect value
+      for freelancers and solopreneurs, not feature checklists.
+    </p>
+    <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        reviews.map((review) => (
+          <PostCard
+            href={`/reviews/${review.id}/`}
+            title={`${review.data.toolName} review`}
+            description={review.data.verdict}
+            category={review.data.category}
+            score={overallScore(review.data.scores)}
+            lastUpdated={review.data.lastUpdated}
+          />
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>

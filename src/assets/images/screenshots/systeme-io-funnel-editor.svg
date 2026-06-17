@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="800" viewBox="0 0 1280 800">
+  <!-- TODO: replace with a real screenshot of the Systeme.io funnel editor (16:10) -->
+  <rect width="1280" height="800" fill="#fafaf8"/>
+  <rect x="0" y="0" width="1280" height="56" fill="#1a1d21"/>
+  <rect x="24" y="18" width="140" height="20" rx="4" fill="#0d9488"/>
+  <rect x="0" y="56" width="240" height="744" fill="#f0fdfa"/>
+  <rect x="24" y="92" width="192" height="32" rx="6" fill="#ccfbf1"/>
+  <rect x="24" y="140" width="192" height="32" rx="6" fill="#ccfbf1"/>
+  <rect x="24" y="188" width="192" height="32" rx="6" fill="#0d9488"/>
+  <rect x="300" y="120" width="640" height="120" rx="8" fill="#ffffff" stroke="#e3e6ea" stroke-width="2"/>
+  <rect x="300" y="280" width="640" height="200" rx="8" fill="#ffffff" stroke="#e3e6ea" stroke-width="2"/>
+  <rect x="300" y="520" width="640" height="120" rx="8" fill="#ffffff" stroke="#e3e6ea" stroke-width="2"/>
+  <rect x="1000" y="120" width="240" height="520" rx="8" fill="#ffffff" stroke="#e3e6ea" stroke-width="2"/>
+  <text x="640" y="760" font-family="monospace" font-size="22" fill="#8a9099" text-anchor="middle">PLACEHOLDER — funnel editor screenshot, 16:10</text>
+</svg>

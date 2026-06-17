@@ -1,0 +1,65 @@
+---
+/**
+ * Email capture form. Set PUBLIC_EMAIL_FORM_ACTION in .env to your
+ * MailerLite/ConvertKit form action URL — until then the form is inert.
+ */
+interface Props {
+  variant?: 'inline' | 'endofpost';
+  heading?: string;
+  subheading?: string;
+}
+
+const {
+  variant = 'inline',
+  heading = 'Get one honest tool review per week',
+  subheading = 'No fluff, no spam. Just what actually works for freelancers — unsubscribe anytime.',
+} = Astro.props;
+
+// TODO: plug in your email provider's form action URL via .env
+const action = import.meta.env.PUBLIC_EMAIL_FORM_ACTION || '#';
+---
+
+<section
+  class:list={[
+    'not-prose rounded-xl',
+    variant === 'endofpost'
+      ? 'my-10 border border-slate-200 bg-slate-50 p-6 sm:p-8'
+      : 'bg-slate-900 p-6 text-white sm:p-8',
+  ]}
+  aria-label="Email newsletter signup"
+>
+  <h2
+    class:list={[
+      'text-xl font-bold',
+      variant === 'endofpost' ? 'text-slate-900' : 'text-white',
+    ]}
+  >
+    {heading}
+  </h2>
+  <p
+    class:list={[
+      'mt-2 text-sm',
+      variant === 'endofpost' ? 'text-slate-600' : 'text-slate-300',
+    ]}
+  >
+    {subheading}
+  </p>
+  <form action={action} method="post" class="mt-4 flex flex-col gap-3 sm:flex-row">
+    <label class="sr-only" for={`email-${variant}`}>Email address</label>
+    <input
+      id={`email-${variant}`}
+      type="email"
+      name="email"
+      required
+      placeholder="you@example.com"
+      autocomplete="email"
+      class="w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-500/40"
+    />
+    <button
+      type="submit"
+      class="shrink-0 rounded-lg bg-accent-600 px-6 py-2.5 text-sm font-bold text-white transition hover:bg-accent-700 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2"
+    >
+      Subscribe
+    </button>
+  </form>
+</section>

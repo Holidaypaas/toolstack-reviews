@@ -1,0 +1,169 @@
+/* Self-hosted variable fonts (no external requests, font-display: swap) */
+@import '@fontsource-variable/sora';
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/jetbrains-mono';
+
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+/*
+ * Design tokens — "the testing bench."
+ * Paper-white surface, ink text, electric teal for actions,
+ * graded-score amber ONLY for rating elements, cool gray lines.
+ */
+@theme {
+  /* Surfaces & text */
+  --color-paper: #fafaf8;
+  --color-paper-raised: #ffffff;
+  --color-ink: #1a1d21;
+  --color-ink-muted: #555b63;
+  --color-ink-faint: #8a9099;
+
+  /* Cool gray borders */
+  --color-line: #e3e6ea;
+  --color-line-strong: #c9cdd3;
+
+  /* Primary accent — electric teal (CTAs and links ONLY) */
+  --color-accent-50: #f0fdfa;
+  --color-accent-100: #ccfbf1;
+  --color-accent-200: #99f6e4;
+  --color-accent-300: #5eead4;
+  --color-accent-400: #2dd4bf;
+  --color-accent-500: #14b8a6;
+  --color-accent-600: #0d9488;
+  --color-accent-700: #0f766e;
+  --color-accent-800: #115e59;
+  --color-accent-900: #134e4a;
+
+  /* Secondary — graded-score amber (rating elements ONLY) */
+  --color-score-50: #fffbeb;
+  --color-score-100: #fef3c7;
+  --color-score-200: #fde68a;
+  --color-score-400: #fbbf24;
+  --color-score-600: #d97706;
+  --color-score-700: #b45309;
+  --color-score-800: #92400e;
+
+  /* Type system: Sora for display, Inter for body, JetBrains Mono for DATA.
+     Every number on the site is mono — that's a core identity element. */
+  --font-display: 'Sora Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system,
+    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'Cascadia Code',
+    Consolas, monospace;
+
+  /* Type scale */
+  --text-display: clamp(2.2rem, 1.55rem + 2.6vw, 3rem);
+  --text-display--line-height: 1.12;
+  --text-display--letter-spacing: -0.025em;
+  --text-display-sm: clamp(1.7rem, 1.35rem + 1.4vw, 2.1rem);
+  --text-display-sm--line-height: 1.18;
+  --text-display-sm--letter-spacing: -0.02em;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  @apply bg-paper text-ink antialiased;
+  font-family: var(--font-sans);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+}
+
+/* Editorial prose: accent links, display headings, mono data inside tables */
+.prose {
+  @apply text-ink;
+}
+.prose a {
+  @apply text-accent-700 font-medium underline decoration-accent-300 underline-offset-2 hover:decoration-accent-600;
+}
+.prose h2,
+.prose h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  scroll-margin-top: 5rem;
+}
+
+/* ---- Motion (restrained, purposeful) ---------------------------------- */
+
+/* Hero: content fades/rises once on page load. 300ms, no stagger. */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.hero-rise {
+  animation: rise-in 300ms ease-out both;
+}
+
+/* Score meters: fill once on scroll-into-view (~600ms ease-out).
+   Default (no JS) is fully filled; the ScoreCard script adds .meter-anim,
+   and the IntersectionObserver adds .is-filled exactly once. */
+.meter-fill {
+  width: var(--meter-value);
+}
+.meter-anim .meter-fill {
+  width: 0;
+  transition: width 600ms ease-out;
+}
+.meter-anim.is-filled .meter-fill {
+  width: var(--meter-value);
+}
+
+/* Cards lift 2px with border shift to teal on hover */
+.card-lift {
+  transition:
+    transform 150ms ease-out,
+    border-color 150ms ease-out,
+    box-shadow 150ms ease-out;
+}
+.card-lift:hover {
+  transform: translateY(-2px);
+  @apply border-accent-600;
+}
+
+/* CTA press state */
+.btn-press:active {
+  transform: translateY(1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .hero-rise {
+    animation: none;
+  }
+  .meter-anim .meter-fill,
+  .meter-fill {
+    width: var(--meter-value);
+    transition: none;
+  }
+  .card-lift,
+  .card-lift:hover {
+    transition: none;
+    transform: none;
+  }
+  .btn-press:active {
+    transform: none;
+  }
+}
+
+/* Visible keyboard focus everywhere */
+:focus-visible {
+  outline: 2px solid var(--color-accent-600);
+  outline-offset: 2px;
+}

@@ -1,0 +1,51 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import { articleSchema } from '../../lib/seo';
+
+export async function getStaticPaths() {
+  const roundups = await getCollection('roundups');
+  return roundups.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+const author = await getEntry(data.author);
+if (!author) throw new Error(`Unknown author "${data.author.id}" in ${entry.id}`);
+const { Content, headings } = await render(entry);
+
+const url = `/best/${entry.id}/`;
+const ogImage = `/og/best/${entry.id}.png`;
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Best Tools', url: '/best/' },
+  { name: data.title, url },
+];
+
+const jsonLd = [
+  articleSchema({
+    title: data.title,
+    description: data.description,
+    url,
+    image: ogImage,
+    publishDate: data.publishDate,
+    lastUpdated: data.lastUpdated,
+    authorName: author.data.name,
+  }),
+];
+---
+
+<ArticleLayout
+  title={data.title}
+  description={data.description}
+  publishDate={data.publishDate}
+  lastUpdated={data.lastUpdated}
+  author={author}
+  headings={headings}
+  breadcrumbs={breadcrumbs}
+  hasAffiliateLinks={true}
+  ogImage={ogImage}
+  jsonLd={jsonLd}
+>
+  <Content />
+</ArticleLayout>

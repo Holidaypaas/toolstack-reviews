@@ -1,0 +1,39 @@
+---
+/**
+ * Analytics, enabled per env var (see .env.example).
+ * Set PUBLIC_PLAUSIBLE_DOMAIN for Plausible, or PUBLIC_GA4_ID for GA4.
+ * If neither is set, nothing is rendered (zero JS).
+ */
+const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN;
+const ga4Id = import.meta.env.PUBLIC_GA4_ID;
+---
+
+{
+  plausibleDomain && (
+    <script
+      is:inline
+      defer
+      data-domain={plausibleDomain}
+      src="https://plausible.io/js/script.js"
+    />
+  )
+}
+{
+  !plausibleDomain && ga4Id && (
+    <>
+      <script
+        is:inline
+        async
+        src={`https://www.googletagmanager.com/gtag/js?id=${ga4Id}`}
+      />
+      <script is:inline define:vars={{ ga4Id }}>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        gtag('config', ga4Id);
+      </script>
+    </>
+  )
+}

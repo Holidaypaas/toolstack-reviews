@@ -1,0 +1,64 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import QuickAnswer from '../../components/QuickAnswer.astro';
+import KeyFacts from '../../components/KeyFacts.astro';
+import { articleSchema } from '../../lib/seo';
+
+export async function getStaticPaths() {
+  const comparisons = await getCollection('comparisons');
+  return comparisons.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+const author = await getEntry(data.author);
+if (!author) throw new Error(`Unknown author "${data.author.id}" in ${entry.id}`);
+const { Content, headings } = await render(entry);
+
+const url = `/vs/${entry.id}/`;
+const ogImage = `/og/vs/${entry.id}.png`;
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Comparisons', url: '/vs/' },
+  { name: `${data.toolA} vs ${data.toolB}`, url },
+];
+
+const jsonLd = [
+  articleSchema({
+    title: data.title,
+    description: data.description,
+    url,
+    image: ogImage,
+    publishDate: data.publishDate,
+    lastUpdated: data.lastUpdated,
+    authorName: author.data.name,
+  }),
+];
+---
+
+<ArticleLayout
+  title={data.title}
+  description={data.description}
+  publishDate={data.publishDate}
+  lastUpdated={data.lastUpdated}
+  author={author}
+  headings={headings}
+  breadcrumbs={breadcrumbs}
+  hasAffiliateLinks={true}
+  ogImage={ogImage}
+  jsonLd={jsonLd}
+>
+  {/* GEO: self-contained citable answer within the first 200 words. */}
+  <QuickAnswer text={data.quickAnswer} />
+  {
+    data.keyFacts && (
+      <KeyFacts
+        facts={data.keyFacts}
+        asOf={data.lastUpdated}
+        subject={`${data.toolA} vs ${data.toolB}`}
+      />
+    )
+  }
+  <Content />
+</ArticleLayout>

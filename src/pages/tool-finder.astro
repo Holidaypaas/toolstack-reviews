@@ -1,0 +1,314 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EmailSignup from '../components/EmailSignup.astro';
+
+const chipGroups = [
+  {
+    name: 'role',
+    label: 'Your role',
+    options: ['Designer', 'Developer', 'Writer', 'Coach', 'Marketer'],
+  },
+  {
+    name: 'teamSize',
+    label: 'Team size',
+    options: ['Just me', '2–5', '6+'],
+  },
+  {
+    name: 'budget',
+    label: 'Monthly budget',
+    options: ['Free only', 'Under $25', 'Under $50', '$50–100'],
+  },
+];
+---
+
+<BaseLayout
+  title="AI Tool Finder — Get a Stack Built From Our Test Results"
+  description="Describe your freelance business and budget. Our AI matches you to the highest-scoring tools from our hands-on reviews — never a tool we haven't tested."
+  breadcrumbs={[
+    { name: 'Home', url: '/' },
+    { name: 'Tool Finder', url: '/tool-finder/' },
+  ]}
+>
+  <div class="mx-auto max-w-3xl px-4 py-12">
+    <p class="font-mono text-xs font-bold uppercase tracking-[0.2em] text-accent-700">
+      AI Tool Finder
+    </p>
+    <h1 class="font-display text-display mt-3 font-bold text-ink">
+      Describe your business. We'll build your stack.
+    </h1>
+    <p class="mt-4 max-w-xl text-lg leading-relaxed text-ink-muted">
+      Tell us what you do, what's slowing you down, and what you can spend.
+      You'll get 3–5 tools matched from our hands-on test results — with our
+      real scores, never a tool we haven't reviewed.
+    </p>
+
+    <form id="finder-form" class="mt-8 rounded-lg border border-line bg-paper-raised p-6 shadow-sm">
+      <label for="finder-query" class="block font-display text-sm font-bold text-ink">
+        What's your situation?
+      </label>
+      <textarea
+        id="finder-query"
+        name="query"
+        rows="3"
+        required
+        maxlength="600"
+        placeholder="e.g. I'm a freelance designer with 12 clients, drowning in invoices and follow-up emails, budget ~$50/month"
+        class="mt-2 w-full rounded-lg border border-line-strong bg-paper px-4 py-3 text-sm text-ink placeholder:text-ink-faint focus:border-accent-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500/40"
+      ></textarea>
+
+      <div class="mt-5 space-y-4">
+        {
+          chipGroups.map((group) => (
+            <fieldset>
+              <legend class="font-mono text-[11px] font-bold uppercase tracking-[0.15em] text-ink-faint">
+                {group.label} <span class="font-normal normal-case tracking-normal">(optional)</span>
+              </legend>
+              <div class="mt-2 flex flex-wrap gap-2" data-chip-group={group.name}>
+                {group.options.map((option) => (
+                  <button
+                    type="button"
+                    data-chip
+                    data-value={option}
+                    aria-pressed="false"
+                    class="rounded-full border border-line-strong bg-paper px-3 py-1.5 text-xs font-semibold text-ink-muted transition-colors hover:border-accent-600 hover:text-accent-700 aria-pressed:border-accent-600 aria-pressed:bg-accent-50 aria-pressed:text-accent-800"
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+          ))
+        }
+      </div>
+
+      <button
+        type="submit"
+        id="finder-submit"
+        class="btn-press mt-6 w-full rounded-lg bg-accent-600 px-6 py-3.5 text-base font-bold text-white shadow-md transition-colors hover:bg-accent-700 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+      >
+        Build my stack
+      </button>
+      <noscript>
+        <p class="mt-3 text-sm text-ink-muted">
+          The tool finder needs JavaScript. No JS? Browse our
+          <a href="/reviews/" class="font-semibold text-accent-700 underline">reviews</a> instead.
+        </p>
+      </noscript>
+    </form>
+
+    <!-- Loading skeleton -->
+    <div id="finder-loading" class="mt-8 hidden" aria-live="polite">
+      <p class="font-mono text-sm text-ink-muted">
+        <span class="inline-block animate-pulse">Testing your requirements…</span>
+      </p>
+      <div class="mt-4 space-y-4">
+        {
+          [1, 2, 3].map(() => (
+            <div class="animate-pulse rounded-lg border border-line bg-paper-raised p-5">
+              <div class="flex items-center justify-between">
+                <div class="h-5 w-40 rounded bg-line" />
+                <div class="h-7 w-14 rounded bg-line" />
+              </div>
+              <div class="mt-3 h-4 w-full rounded bg-line" />
+              <div class="mt-2 h-4 w-2/3 rounded bg-line" />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    <!-- Results render here -->
+    <section id="finder-results" class="mt-8 hidden" aria-live="polite" aria-label="Recommended tools"></section>
+
+    <p id="finder-disclosure" class="mt-6 hidden rounded-md border border-line bg-paper-raised px-4 py-2.5 text-xs leading-relaxed text-ink-faint">
+      Recommendations are AI-generated from our human-written reviews. We earn
+      commissions from some links — at no extra cost to you.
+      <a href="/affiliate-disclosure/" class="underline hover:text-accent-700">Learn more</a>.
+    </p>
+
+    <div id="finder-followup" class="mt-10 hidden">
+      <p class="text-sm font-semibold text-ink">
+        Want the full breakdown?
+        <a href="/reviews/" class="text-accent-700 underline hover:text-accent-800">Read our reviews</a> —
+        every score is explained.
+      </p>
+      <div class="mt-4">
+        <EmailSignup
+          variant="endofpost"
+          heading="Get the full stack guide as a PDF"
+          subheading="Your matched stack plus setup order, migration tips, and 2026 pricing — free."
+        />
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  const form = document.getElementById('finder-form') as HTMLFormElement;
+  const queryInput = document.getElementById('finder-query') as HTMLTextAreaElement;
+  const submitButton = document.getElementById('finder-submit') as HTMLButtonElement;
+  const loading = document.getElementById('finder-loading')!;
+  const results = document.getElementById('finder-results')!;
+  const disclosure = document.getElementById('finder-disclosure')!;
+  const followup = document.getElementById('finder-followup')!;
+
+  // Chips: single-select per group, toggleable
+  document.querySelectorAll<HTMLElement>('[data-chip-group]').forEach((group) => {
+    group.addEventListener('click', (event) => {
+      const chip = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-chip]');
+      if (!chip) return;
+      const wasPressed = chip.getAttribute('aria-pressed') === 'true';
+      group
+        .querySelectorAll('[data-chip]')
+        .forEach((c) => c.setAttribute('aria-pressed', 'false'));
+      chip.setAttribute('aria-pressed', String(!wasPressed));
+    });
+  });
+
+  function chipValue(name: string): string {
+    return (
+      document
+        .querySelector(`[data-chip-group="${name}"] [data-chip][aria-pressed="true"]`)
+        ?.getAttribute('data-value') ?? ''
+    );
+  }
+
+  interface Recommendation {
+    slug: string;
+    toolName: string;
+    pricingFrom: string;
+    score: number;
+    reviewPath: string;
+    goPath: string;
+    reason: string;
+  }
+
+  function el<K extends keyof HTMLElementTagNameMap>(
+    tag: K,
+    className: string,
+    text?: string
+  ): HTMLElementTagNameMap[K] {
+    const node = document.createElement(tag);
+    node.className = className;
+    if (text) node.textContent = text;
+    return node;
+  }
+
+  function renderCard(rec: Recommendation): HTMLElement {
+    const card = el('article', 'rounded-lg border border-line bg-paper-raised p-5 shadow-sm');
+
+    const top = el('div', 'flex flex-wrap items-center justify-between gap-3');
+    const name = el('h3', 'font-display text-lg font-bold tracking-tight text-ink', rec.toolName);
+    const badge = el(
+      'span',
+      'inline-flex items-baseline gap-0.5 rounded border-2 border-ink bg-paper-raised px-2 py-1 font-mono text-base font-bold leading-none text-score-600'
+    );
+    badge.textContent = rec.score.toFixed(1);
+    badge.append(el('span', 'text-[10px] font-semibold text-ink-faint', '/10'));
+    badge.setAttribute('aria-label', `Our score: ${rec.score.toFixed(1)} out of 10`);
+    top.append(name, badge);
+
+    const reason = el('p', 'mt-2 text-sm leading-relaxed text-ink-muted', rec.reason);
+    const meta = el('p', 'mt-2 font-mono text-xs text-ink-faint', `From ${rec.pricingFrom}`);
+
+    const actions = el('div', 'mt-4 flex flex-wrap items-center gap-3');
+    const tryLink = el(
+      'a',
+      'btn-press rounded-lg bg-accent-600 px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-accent-700',
+      `Try ${rec.toolName} free`
+    );
+    tryLink.href = rec.goPath;
+    tryLink.rel = 'sponsored noopener';
+    const reviewLink = el(
+      'a',
+      'text-sm font-semibold text-accent-700 underline hover:text-accent-800',
+      'Read our review →'
+    );
+    reviewLink.href = rec.reviewPath;
+    actions.append(tryLink, reviewLink);
+
+    card.append(top, reason, meta, actions);
+    return card;
+  }
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const query = queryInput.value.trim();
+    if (!query) return;
+
+    submitButton.disabled = true;
+    results.classList.add('hidden');
+    results.replaceChildren();
+    loading.classList.remove('hidden');
+
+    let data: {
+      message?: string;
+      recommendations?: Recommendation[];
+      fallback?: boolean;
+      error?: string;
+    };
+    try {
+      const response = await fetch('/api/recommend', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query,
+          role: chipValue('role'),
+          teamSize: chipValue('teamSize'),
+          budget: chipValue('budget'),
+        }),
+      });
+      data = await response.json();
+    } catch {
+      data = {
+        fallback: true,
+        message: "We couldn't reach the recommender — browse our top-rated tools instead.",
+        recommendations: [],
+      };
+    }
+
+    loading.classList.add('hidden');
+    submitButton.disabled = false;
+
+    if (data.error === 'rate_limited') {
+      results.append(
+        el(
+          'p',
+          'rounded-lg border border-line bg-paper-raised p-5 text-sm text-ink-muted',
+          'You’ve hit the hourly limit for recommendations. Meanwhile, every tool we’ve tested is in our reviews index.'
+        )
+      );
+    } else {
+      if (data.message) {
+        results.append(el('p', 'text-base font-medium leading-relaxed text-ink', data.message));
+      }
+      if (data.recommendations && data.recommendations.length > 0) {
+        const list = el('div', 'mt-5 space-y-4');
+        data.recommendations.forEach((rec) => list.append(renderCard(rec)));
+        results.append(list);
+      } else if (!data.message) {
+        results.append(
+          el(
+            'p',
+            'text-sm text-ink-muted',
+            'Nothing in our tested catalog fits that brief — browse our reviews instead.'
+          )
+        );
+      }
+      const browse = el('p', 'mt-5 text-sm');
+      const browseLink = el(
+        'a',
+        'font-semibold text-accent-700 underline hover:text-accent-800',
+        'Browse all our top-rated tools →'
+      );
+      browseLink.href = '/reviews/';
+      browse.append(browseLink);
+      results.append(browse);
+    }
+
+    results.classList.remove('hidden');
+    disclosure.classList.remove('hidden');
+    followup.classList.remove('hidden');
+    results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  });
+</script>

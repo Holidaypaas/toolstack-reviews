@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <!-- TODO: replace with a real side-by-side screenshot of both tools -->
+  <rect width="1200" height="630" fill="#f8fafc"/>
+  <rect x="60" y="120" width="500" height="430" rx="16" fill="#ccfbf1" stroke="#0d9488" stroke-width="3"/>
+  <rect x="640" y="120" width="500" height="430" rx="16" fill="#e2e8f0" stroke="#94a3b8" stroke-width="3"/>
+  <text x="310" y="350" font-family="system-ui, sans-serif" font-size="40" font-weight="bold" fill="#134e4a" text-anchor="middle">Systeme.io</text>
+  <text x="890" y="350" font-family="system-ui, sans-serif" font-size="40" font-weight="bold" fill="#334155" text-anchor="middle">ClickFunnels</text>
+  <text x="600" y="350" font-family="system-ui, sans-serif" font-size="48" font-weight="bold" fill="#0f172a" text-anchor="middle">VS</text>
+  <text x="600" y="70" font-family="system-ui, sans-serif" font-size="32" font-weight="bold" fill="#0f172a" text-anchor="middle">Comparison — placeholder image</text>
+</svg>

@@ -1,0 +1,92 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../config/site';
+---
+
+<BaseLayout
+  title="How We Test Tools"
+  description="Our review methodology: paid accounts, real projects, 2+ weeks of daily use, and a fixed 0-10 scoring rubric. No pay-to-win rankings."
+  breadcrumbs={[
+    { name: 'Home', url: '/' },
+    { name: 'How We Test', url: '/how-we-test/' },
+  ]}
+>
+  <div class="mx-auto max-w-[720px] px-4 py-12">
+    <h1 class="font-display text-display-sm font-bold text-ink">
+      How we test tools
+    </h1>
+    <div class="prose mt-8 max-w-none">
+      <p class="text-lg text-ink-muted">
+        Anyone can paraphrase a pricing page. A review is only useful if the
+        reviewer hit the same walls you will. Here's the exact process behind
+        every score on {SITE.name}.
+      </p>
+
+      <h2>How do we test each tool?</h2>
+      <ol>
+        <li>
+          <strong>We pay for a real account.</strong> Free trials hide the rough
+          edges: billing, limits, support quality. We test on the plan we'd
+          actually recommend to a freelancer.
+        </li>
+        <li>
+          <strong>We build a real project.</strong> Not a toy demo. A working
+          funnel, an email sequence, or a client workflow, the same thing you'd
+          build in your first week.
+        </li>
+        <li>
+          <strong>We use it daily for at least two weeks.</strong> Most tools
+          impress on day one and annoy by day ten. The verdict gets written
+          after the honeymoon ends.
+        </li>
+        <li>
+          <strong>We contact support at least once.</strong> Response time and
+          answer quality go into the score, because you'll need support
+          eventually.
+        </li>
+        <li>
+          <strong>We re-test after major releases</strong> and update the
+          review. The "Last updated" badge on every post is real.
+        </li>
+      </ol>
+
+      <h2>How is the 0-10 score calculated?</h2>
+      <p>
+        Every tool gets four sub-scores from 0 to 10, and the overall score is
+        their average. We weight all four equally because, for a solo business,
+        a tool that nails features but fails on price is no better than the
+        reverse.
+      </p>
+      <ul>
+        <li><strong>Value for money:</strong> what you actually get on the cheapest usable plan.</li>
+        <li><strong>Ease of use:</strong> time from signup to first real result.</li>
+        <li><strong>Features:</strong> does the headline feature work well, and how deep does it go?</li>
+        <li><strong>Support:</strong> measured response time, plus how accurate the docs are.</li>
+      </ul>
+      <p>
+        Reliability (bugs, downtime, data-export options) can pull any sub-score
+        down. A tool that loses your data doesn't get a high features score for
+        having the feature.
+      </p>
+
+      <h2>How do affiliate links affect our scores?</h2>
+      <p>
+        This site earns money through affiliate links: when you buy through a
+        link here, the vendor pays a commission at no extra cost to you. Two
+        rules keep that honest.
+      </p>
+      <ul>
+        <li>
+          <strong>Scores are locked before links are added.</strong> The number
+          comes from the rubric first. Only then do we check whether an
+          affiliate program even exists.
+        </li>
+        <li>
+          <strong>We recommend tools with no program at all</strong> when
+          they're the best option. Read the full
+          <a href="/affiliate-disclosure/">affiliate disclosure</a>.
+        </li>
+      </ul>
+    </div>
+  </div>
+</BaseLayout>

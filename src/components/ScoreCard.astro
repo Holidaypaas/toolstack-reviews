@@ -1,0 +1,106 @@
+---
+import { SCORE_LABELS, overallScore, formatScore, type Scores } from '../lib/score';
+
+/**
+ * The ToolStack test-score card — the site's signature visual element.
+ * Large mono overall score + labeled meter bars that fill once on
+ * scroll-into-view (respects prefers-reduced-motion; works without JS).
+ */
+interface Props {
+  toolName: string;
+  scores: Scores;
+  /** Compact variant drops the header strip (used inside VerdictBox). */
+  compact?: boolean;
+  class?: string;
+}
+
+const { toolName, scores, compact = false, class: className } = Astro.props;
+const overall = overallScore(scores);
+const rows = (Object.keys(SCORE_LABELS) as (keyof Scores)[]).map((key) => ({
+  label: SCORE_LABELS[key],
+  value: scores[key],
+}));
+---
+
+<div
+  class:list={[
+    'score-card not-prose overflow-hidden rounded-lg border-2 border-ink bg-paper-raised',
+    className,
+  ]}
+  data-score-card
+  role="img"
+  aria-label={`${toolName} scored ${formatScore(overall)} out of 10 overall. ${rows
+    .map((row) => `${row.label}: ${formatScore(row.value)}`)
+    .join(', ')}.`}
+>
+  {
+    !compact && (
+      <div class="flex items-center justify-between border-b-2 border-ink bg-ink px-4 py-1.5">
+        <span class="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-paper">
+          ToolStack&nbsp;· Tested
+        </span>
+        <span class="font-mono text-[10px] uppercase tracking-[0.2em] text-paper/60">
+          Score /10
+        </span>
+      </div>
+    )
+  }
+  <div class="flex items-stretch gap-5 p-5" aria-hidden="true">
+    <!-- Overall: the big mono number -->
+    <div class="flex shrink-0 flex-col items-center justify-center border-r border-line pr-5">
+      <span class="font-mono text-5xl font-bold leading-none tracking-tight text-score-600">
+        {formatScore(overall)}
+      </span>
+      <span class="mt-2 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-faint">
+        Overall
+      </span>
+    </div>
+    <!-- Sub-score meters -->
+    <div class="flex w-full flex-col justify-center gap-2.5">
+      {
+        rows.map((row) => (
+          <div class="grid grid-cols-[7.5rem_1fr_2.2rem] items-center gap-2">
+            <span class="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">
+              {row.label}
+            </span>
+            <span
+              class="meter relative block h-2 overflow-hidden rounded-sm bg-line"
+              style={`background-image: repeating-linear-gradient(to right, transparent, transparent calc(10% - 1px), var(--color-paper) calc(10% - 1px), var(--color-paper) 10%);`}
+            >
+              <span
+                class="meter-fill absolute inset-y-0 left-0 block rounded-sm bg-score-600"
+                style={`--meter-value: ${row.value * 10}%`}
+              />
+            </span>
+            <span class="text-right font-mono text-xs font-bold text-ink">
+              {formatScore(row.value)}
+            </span>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</div>
+
+<script>
+  // Fill meters once when the card first scrolls into view.
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const cards = document.querySelectorAll('[data-score-card]');
+  if (!reduceMotion && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-filled');
+            observer.unobserve(entry.target);
+          }
+        }
+      },
+      { threshold: 0.4 }
+    );
+    cards.forEach((card) => {
+      card.classList.add('meter-anim'); // arm the animation only when JS runs
+      observer.observe(card);
+    });
+  }
+</script>

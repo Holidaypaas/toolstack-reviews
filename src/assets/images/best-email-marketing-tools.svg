@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <!-- TODO: replace with a real collage / screenshots of the ranked tools -->
+  <rect width="1200" height="630" fill="#f0fdfa"/>
+  <rect x="100" y="140" width="300" height="360" rx="16" fill="#ffffff" stroke="#0d9488" stroke-width="3"/>
+  <rect x="450" y="180" width="300" height="320" rx="16" fill="#ffffff" stroke="#99f6e4" stroke-width="3"/>
+  <rect x="800" y="220" width="300" height="280" rx="16" fill="#ffffff" stroke="#99f6e4" stroke-width="3"/>
+  <text x="250" y="120" font-family="system-ui, sans-serif" font-size="48" fill="#f59e0b" text-anchor="middle">#1</text>
+  <text x="600" y="70" font-family="system-ui, sans-serif" font-size="32" font-weight="bold" fill="#134e4a" text-anchor="middle">Best Email Marketing Tools — placeholder image</text>
+</svg>

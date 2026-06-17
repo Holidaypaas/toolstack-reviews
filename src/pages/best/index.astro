@@ -1,0 +1,40 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+
+const roundups = (await getCollection('roundups')).sort(
+  (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
+);
+---
+
+<BaseLayout
+  title="Best Tools by Category"
+  description="Our ranked picks of the best software tools for freelancers, by category."
+  breadcrumbs={[
+    { name: 'Home', url: '/' },
+    { name: 'Best Tools', url: '/best/' },
+  ]}
+>
+  <div class="mx-auto max-w-5xl px-4 py-12">
+    <h1 class="font-display text-display-sm font-bold text-ink">
+      Best tools by category
+    </h1>
+    <p class="mt-3 max-w-xl text-lg text-ink-muted">
+      Ranked picks based on hands-on testing — the top spot is never for sale.
+    </p>
+    <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        roundups.map((r) => (
+          <PostCard
+            href={`/best/${r.id}/`}
+            title={r.data.title}
+            description={r.data.description}
+            category={r.data.category}
+            lastUpdated={r.data.lastUpdated}
+          />
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>

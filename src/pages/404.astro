@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Page Not Found"
+  description="The page you're looking for doesn't exist or has moved."
+  noindex={true}
+>
+  <div class="mx-auto max-w-5xl px-4 py-24 text-center">
+    <p class="text-sm font-bold uppercase tracking-widest text-accent-600">404</p>
+    <h1 class="mt-3 text-4xl font-extrabold tracking-tight text-slate-900">
+      Page not found
+    </h1>
+    <p class="mx-auto mt-4 max-w-md text-lg text-slate-600">
+      That page doesn't exist (or we moved it). Try the reviews index, or head
+      back home.
+    </p>
+    <div class="mt-8 flex justify-center gap-4">
+      <a
+        href="/"
+        class="rounded-lg bg-accent-600 px-6 py-3 font-bold text-white transition hover:bg-accent-700"
+      >
+        Go home
+      </a>
+      <a
+        href="/reviews/"
+        class="rounded-lg border border-slate-300 px-6 py-3 font-semibold text-slate-700 transition hover:border-accent-600 hover:text-accent-700"
+      >
+        Browse reviews
+      </a>
+    </div>
+  </div>
+</BaseLayout>

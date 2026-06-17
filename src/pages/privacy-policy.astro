@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../config/site';
+---
+
+<BaseLayout
+  title="Privacy Policy"
+  description={`What data ${SITE.name} collects, how it's used, and your rights regarding it.`}
+  breadcrumbs={[
+    { name: 'Home', url: '/' },
+    { name: 'Privacy Policy', url: '/privacy-policy/' },
+  ]}
+>
+  <div class="mx-auto max-w-[720px] px-4 py-12">
+    <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">
+      Privacy policy
+    </h1>
+    <div class="prose prose-slate mt-8 max-w-none">
+      <!-- TODO: have a lawyer review this page before launch. This is plausible placeholder copy, not legal advice. -->
+      <p><em>Last updated: June 12, 2026</em></p>
+
+      <h2>What we collect</h2>
+      <ul>
+        <li>
+          <strong>Email address</strong> — only if you subscribe to the
+          newsletter. Used solely to send the newsletter; unsubscribe anytime
+          via the link in every email.
+        </li>
+        <li>
+          <strong>Anonymous analytics</strong> — page views, referrers, and
+          country-level location to understand what content is useful. No
+          cross-site tracking profiles are built.
+        </li>
+        <li>
+          <strong>Affiliate click events</strong> — when you click an outbound
+          affiliate link we record which tool was clicked (not who clicked it).
+        </li>
+      </ul>
+
+      <h2>What we don't do</h2>
+      <ul>
+        <li>We don't sell or rent personal information.</li>
+        <li>We don't run third-party ad networks.</li>
+        <li>We don't store payment information — purchases happen on the vendor's site under their privacy policy.</li>
+      </ul>
+
+      <h2>Third parties</h2>
+      <p>
+        When you click an affiliate link, the destination site may set its own
+        cookies to attribute the referral. Those cookies are governed by the
+        vendor's privacy policy, not ours.
+      </p>
+
+      <h2>Your rights</h2>
+      <p>
+        You can request a copy or deletion of any personal data we hold (in
+        practice: your newsletter email) by writing to
+        <!-- TODO: replace with your real contact email -->
+        <a href="mailto:hello@toolstackreviews.com">hello@toolstackreviews.com</a>.
+        California residents have additional rights under the CCPA; we honor
+        deletion and disclosure requests from any jurisdiction.
+      </p>
+
+      <!-- TODO: add a cookie-consent banner before adding any marketing/ad cookies -->
+    </div>
+  </div>
+</BaseLayout>

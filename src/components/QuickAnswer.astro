@@ -1,0 +1,29 @@
+---
+/**
+ * GEO summary box — a self-contained 60-80 word answer that AI search
+ * engines can lift verbatim. Templates render it from the `quickAnswer`
+ * frontmatter field within the first 200 words of every review/comparison;
+ * it's also importable directly in MDX for guides and roundups.
+ *
+ * Content rules (enforced by you, not code): name the tool explicitly,
+ * include the verdict and price, and make it readable with zero context.
+ */
+interface Props {
+  /** Pass text via the `text` prop or as slot content. */
+  text?: string;
+}
+
+const { text } = Astro.props;
+---
+
+<div
+  class="not-prose my-6 rounded-r-lg border-l-4 border-accent-600 bg-accent-50/60 px-5 py-4"
+  data-quick-answer
+>
+  <p class="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-accent-800">
+    Quick answer
+  </p>
+  <p class="mt-2 text-[15px] font-medium leading-relaxed text-ink">
+    {text ?? <slot />}
+  </p>
+</div>
