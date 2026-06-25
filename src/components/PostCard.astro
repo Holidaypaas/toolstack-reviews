@@ -1,12 +1,10 @@
 ---
-import Glyph from './Glyph.astro';
 import ScoreBadge from './ScoreBadge.astro';
 import type { CATEGORIES } from '../content.config';
 
 interface Props {
   href: string;
   title: string;
-  /** One-line verdict / description. */
   description: string;
   category?: (typeof CATEGORIES)[number];
   score?: number;
@@ -14,21 +12,39 @@ interface Props {
   badge?: string;
 }
 
-const {
-  href,
-  title,
-  description,
-  category = 'productivity',
-  score,
-  lastUpdated,
-  badge,
-} = Astro.props;
+const { href, title, description, category = 'productivity', score, lastUpdated, badge } =
+  Astro.props;
+
+const CATEGORY_META: Record<string, { label: string; accent: string; bg: string }> = {
+  email:        { label: 'Email Marketing', accent: 'text-sky-700',     bg: 'bg-sky-50' },
+  funnels:      { label: 'Funnels',         accent: 'text-teal-700',    bg: 'bg-teal-50' },
+  invoicing:    { label: 'Invoicing',       accent: 'text-emerald-700', bg: 'bg-emerald-50' },
+  'ai-writing': { label: 'AI Writing',      accent: 'text-violet-700',  bg: 'bg-violet-50' },
+  scheduling:   { label: 'Scheduling',      accent: 'text-orange-700',  bg: 'bg-orange-50' },
+  crm:          { label: 'CRM',             accent: 'text-rose-700',    bg: 'bg-rose-50' },
+  hosting:      { label: 'Hosting',         accent: 'text-slate-700',   bg: 'bg-slate-100' },
+  productivity: { label: 'Productivity',    accent: 'text-amber-700',   bg: 'bg-amber-50' },
+};
+
+const meta = CATEGORY_META[category] ?? CATEGORY_META.productivity;
 ---
 
 <article
-  class="card-lift group relative flex flex-col overflow-hidden rounded-lg border border-line bg-paper-raised shadow-sm"
+  class="card-lift group relative flex flex-col overflow-hidden rounded-xl border border-line bg-paper-raised shadow-sm"
 >
-  <Glyph name={category} variant="thumb" class="h-32 w-full" />
+  <!-- Colored category header strip -->
+  <div class:list={['flex items-center justify-between px-4 py-3 border-b border-line/60', meta.bg]}>
+    <span class:list={['font-mono text-[11px] font-bold uppercase tracking-[0.15em]', meta.accent]}>
+      {meta.label}
+    </span>
+    {badge && (
+      <span class="rounded-full bg-white/80 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wide text-ink-muted">
+        {badge}
+      </span>
+    )}
+  </div>
+
+  <!-- Card body -->
   <div class="flex flex-1 flex-col p-5">
     <div class="flex items-start justify-between gap-3">
       <h3 class="font-display text-base font-bold leading-snug tracking-tight text-ink">
@@ -39,31 +55,28 @@ const {
           {title}
         </a>
       </h3>
-      {score !== undefined && <ScoreBadge score={score} size="sm" class="shrink-0" />}
+      {score !== undefined && <ScoreBadge score={score} size="sm" class="mt-0.5 shrink-0" />}
     </div>
-    {
-      badge && (
-        <span class="mt-2 w-fit rounded-full bg-accent-50 px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-accent-700">
-          {badge}
-        </span>
-      )
-    }
-    <p class="mt-2 line-clamp-3 text-sm leading-relaxed text-ink-muted">
+
+    <p class="mt-2.5 line-clamp-3 text-sm leading-relaxed text-ink-muted">
       {description}
     </p>
-    {
-      lastUpdated && (
-        <p class="mt-auto pt-3 font-mono text-[11px] text-ink-faint">
+
+    <div class="mt-auto flex items-center justify-between pt-4">
+      {lastUpdated && (
+        <p class="font-mono text-[11px] text-ink-faint">
           Updated{' '}
           <time datetime={lastUpdated.toISOString().slice(0, 10)}>
-            {lastUpdated.toLocaleDateString('en-US', {
-              month: 'short',
-              day: 'numeric',
-              year: 'numeric',
-            })}
+            {lastUpdated.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
           </time>
         </p>
-      )
-    }
+      )}
+      <span
+        class="ml-auto font-mono text-[11px] font-semibold text-accent-600 opacity-0 transition-opacity group-hover:opacity-100"
+        aria-hidden="true"
+      >
+        Read →
+      </span>
+    </div>
   </div>
 </article>
